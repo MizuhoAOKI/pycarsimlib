@@ -4,6 +4,7 @@ import os
 import sys
 import struct
 import platform
+import time
 from pycarsimlib.api import vs_solver
 from datetime import timedelta
 from ctypes import cdll
@@ -26,6 +27,7 @@ class CarsimManager:
 
         # set simfile path
         self.simfile_path = simfile_path
+        logger.info(f"simfile path : {self.simfile_path}")
 
         # select vehicle models
         if vehicle_type == "normal_vehicle":
@@ -106,6 +108,7 @@ class CarsimManager:
     def reset(self):
         """ reset """
         self.close()
+        time.sleep(5.0)
         self._init_carsim()
 
     def step(self, action, delta_time):

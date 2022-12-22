@@ -9,6 +9,7 @@ logger = initialize_logging(__name__)
 def main() -> None:
     """ sample run """
     logger.info(f"pycarsimlib version=={pycarsimlib.__version__}")
+    logger.info("Starting sample run. ")
 
     # instantiate carsim manager
     cm = CarsimManager(
@@ -37,4 +38,3 @@ def main() -> None:
 
     # close carsim
     cm.close()
-

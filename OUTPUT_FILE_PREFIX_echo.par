@@ -1,0 +1,799 @@
+PARSFILE
+! CarSim 2022.1
+! Revision 181270, June 8, 2022
+MODEL_LAYOUT I_I
+
+DATASET_TITLE StaticRunDatabase
+CATEGORY Static
+TITLE StaticRunDatabase <Static>
+
+! Echo: OUTPUT_FILE_PREFIX_echo.par
+! ALERT: An error occurred during the model initialization and no run was made.
+!        Therefore, the information in this echo file might not be complete.
+!        Please check the log file for details about the error.
+
+! This run was attempted 04:25 on December 23, 2022.
+
+!------------------------------------------------------------------------------------
+! SYSTEM PARAMETERS (SIMULATION OPTIONS)
+!------------------------------------------------------------------------------------
+! [D] (default) indicates that a parameter was not set by reading from a Parsfile.
+! [I] indicates that changing the parameter via an Event triggers an initialization.
+! [L] indicates that the parameter is locked once the simulation starts.
+
+ID_EVENT            0 ; - ! ID number that can be assigned to the current event
+ID_RUN              0 ; - ! ID number that can be assigned to a simulation run
+IPRINT             50 ! Print interval: output time step TSTEP_WRITE = TSTEP*IPRINT;
+                      ! set IPRINT = 0 for debug (TSTEP_WRITE = T_DT) [L]
+NDIGITS_ECHO       10 ! [D] Max. no. of digits for printing floating-point numbers
+! NIMPORT           3 ! Number of variables activated for import (read only)
+! NOUT_ANI_LIVE    64 ! Number of variables sent live to animators (read only)
+! NOUT_EXPORT       3 ! Number of output variables activated for export (read only)
+! NOUT_WRITE      685 ! Number of output variables written to file (read only)
+OPT_ALL_WRITE       1 ! Write all outputs to file? 1 -> all, 0 -> only activated
+                      ! outputs
+OPT_BUFFER_WRITE    0 ! [D] Retain output data in memory buffer until end of run? 0
+                      ! -> no, write immediately to file, 1 -> yes, buffer during
+                      ! run and write to file after run finishes [L]
+OPT_CHECK_MATH      2 ! [D] Check for math exceptions? 2 -> as errors, 1 -> as
+                      ! warnings, 0 -> no checks
+OPT_ECHO_ALL_PARS   0 ! [D] Echo all parameters in this VS Solver? 0 -> no, 1 -> yes
+OPT_ECHO_ALL_UNITS  0 ! [D] Echo list of units and scale factors? 0 -> no, 1 -> yes
+OPT_ECHO_ANI_LIVE   0 ! [D] Echo variables sent live to video? 0 -> no, 1 -> yes
+OPT_ECHO_DEFAULT    1 ! [D] Identify values not read? 1 -> yes, show [D], 0 -> no
+OPT_ECHO_ICS        0 ! [D] Echo initial conditions? 0 -> no, 1 -> yes
+OPT_ECHO_KEYWORDS_LC 0 ! [D] Echo all keywords in lowercase? 0 -> no, 1 -> yes
+OPT_ECHO_WRITE      0 ! [D] Echo written outputs? 0 -> no, 1 -> yes
+OPT_ENABLE_PYTHON   0 ! [D] Enable access to embedded Python? 0 -> no, 1 -> yes
+OPT_ERROR_DIALOG    1 ! [D] Show pop-up dialog box if fatal error occurs: 1 -> yes
+                      ! (normal use), 0 -> no (for batch runs)
+OPT_ERROR_DUP_DEF   0 ! [D] Handle case where DEFINE_IMPORT, DEFINE_OUTPUT,
+                      ! DEFINE_PARAMETER, or DEFINE_VARIABLE attempts to define a
+                      ! variable with a name that is already in use. 0 -> write
+                      ! warning in log file, 1 -> generate error [L]
+OPT_ERROR_SHOW_ALL  0 ! [D] Show pop-up boxes for all errors: 0 -> only show the
+                      ! first, 1 -> also show subsequent errors
+OPT_INT_METHOD      0 ! Numerical integration method: 0 -> AB-2; 1 -> RK-2; 2 ->
+                      ! AM-2; 3 -> AM-3; 4 -> AM-4; -1 -> Euler. AB-2 and Euler are
+                      ! full-step methods (TSTEP = 0.0005s is typical); AM and RK-2
+                      ! use half-steps (TSTEP = 0.001s is typical, i.e., half-step
+                      ! = 0.0005s) [L]
+OPT_IO_SYNC_FM      0 ! [D] Synchronize imports and exports for case when imported
+                      ! forces and moments are calculated from exported kinematical
+                      ! variables: 0 -> no, 1 -> synchronize. This option is
+                      ! available for OPT_INT_METHOD = -1 or 0 when there are both
+                      ! import and export variables. [L]
+OPT_LINEARIZATION   0 ! [D] Numerical linearization applied for: 0 -> all ODEs of
+                      ! the model, 1 -> only selected derivatives [L]
+OPT_LOG_DEBUG       0 ! [D] Log file writing: 0 -> normal, 1 -> crash expected
+OPT_LOG_VERBOSE     2 ! [D] Log file verbosity: 2 -> errors + most events + parsfile
+                      ! names, 0 -> errors only, 1 -> errors + events, 3 ->
+                      ! advanced diagnostics
+OPT_LOG_WARNINGS    1 ! [D] Write warnings into log file? 1 -> yes, 0 -> no
+OPT_PAUSE           0 ! [D] Pause at end of run with window open? 0 -> no, 1 -> yes
+OPT_SKIP_INIT_DYN   0 ! [D] Skip initial dynamic calculations (for some RT systems)?
+                      ! 0 -> no, 1 -> yes
+OPT_SKIP_TSTART     0 ! [D] Skip calculations at T = TSTART when running under
+                      ! external software? 0 -> no, 1 -> skip [L]
+OPT_SORT_WRITE      1 ! [D] Sort written outputs? 1 -> alphabetical, 0 -> as entered
+OPT_STOP            0 ! Option for stopping the run: 0 -> stop when T reaches TSTOP;
+                      ! 1 -> stop when T reaches TSTOP or station reaches SSTOP; -1
+                      ! -> run until stopped using VS Commands or external control
+OPT_VS_FILETYPE     4 ! Type of output file: 1-> 64-bit VS, 2-> 32-bit VS, 3 ->
+                      ! 32-bit ERD, 4 -> text CSV (no binary), 0 -> no output file
+OPT_WRITE           1 ; - ! [D] Write outputs when T > TSTART_WRITE? 1 -> write, 0
+                      ! -> don't write; change this using VS Commands or Events
+! RTIME   718899.8199 ; - ! CALC -- Computational efficiency (sec/sim. sec)
+TSTART              0 ; s ! Starting time for the simulation clock
+TSTART_T_EVENT      0 ; s ! [D] Event clock reset time: T_EVENT = T - TSTART_T_EVENT
+TSTART_WRITE        0 ; s ! Start writing outputs when this time is reached
+TSTEP          0.0005 ; s ! Time step for numerical integration [L]
+! TSTEP_WRITE   0.025 ; s ! CALC -- Time interval in output time-series file
+TSTOP              50 ; s ! Stop when this time is reached
+! T_DT         0.0005 ; s ! CALC -- Time increment between calculations
+
+!------------------------------------------------------------------------------------
+! SYSTEM CONSTANTS
+!------------------------------------------------------------------------------------
+! DR      57.29577951 ; - ! Deg/rad symbol to use in formulas (read-only)
+! G           9.80665 ; - ! Symbol for gravity constant m/s/s (read-only)
+! PI      3.141592654 ; - ! Symbol for PI to use in formulas (read-only)
+! ZERO              0 ; - ! Symbol for zero to use in VS Events (read-only)
+
+!------------------------------------------------------------------------------------
+! VEHICLE INITIALIZATION, LIMITS, AND GRAVITY
+!------------------------------------------------------------------------------------
+R_GRAVITY           1 ; - ! [D] Scale factor applied to acceleration of gravity [I]
+
+OPT_INIT_CONFIG     1 ! [D] Initialize vehicle height, pitch, roll, and deflection
+                      ! variables? 1 -> yes, 0 -> no, start 'as is' [I]
+OPT_INIT_SPEED      1 ! [D] Initialize vehicle speed variables? 1 -> yes, 0 -> no,
+                      ! start 'as is' [I]
+ROLL_MAX_STOP      80 ; deg ! [D] Maximum roll angle magnitude: stop the run if
+                      ! reached
+VLOW_STOP          -1 ; km/h ! [D] Minimum allowed absolute speed: stop the run if
+                      ! reached; use -1 to disable
+
+!------------------------------------------------------------------------------------
+! VEHICLE CONFIGURATION
+!------------------------------------------------------------------------------------
+! DUALS             0 ! Dual tires enabled by SET_DUALS in Simfile? (read-only)
+! N_VEHICLES        1 ! Number of vehicles (lead units) (read-only)
+! VEHICLE_NUNITS    1 ! Number of vehicle units (read-only)
+! VEHICLE_NAXLES    2 ! Number of vehicle axles (read-only)
+! VEHICLE_AXLE_MAP(1) 2 ! Number of axles on unit 1 (read-only)
+
+!------------------------------------------------------------------------------------
+! VEHICLE
+!------------------------------------------------------------------------------------
+! The instant center of gravity is calculated every time step using the sprung mass
+! + axles and wheels + payloads. Output variables for the vehicle such as Vx, Vy,
+! Vz, Ax, Ay, and Az are based on the motion of this instant CG for the total laden
+! (TL) unit.
+
+! H_CG_TL 506.9120586 ; mm ! CALC -- Height of TL CG
+! LX_CG_TL 1049.562958 ; mm ! CALC -- X distance TL CG is behind origin
+! Y_CG_TL           0 ; mm ! CALC -- Y coordinate of TL CG
+! M_TL           1501 ; kg ! CALC -- TL mass
+! IXX_TL  712.7028188 ; kg-m2 ! CALC -- TL roll inertia moment
+! IYY_TL  2044.265545 ; kg-m2 ! CALC -- TL pitch inertia moment
+! IZZ_TL  2192.089539 ; kg-m2 ! CALC -- TL yaw inertia moment
+
+!------------------------------------------------------------------------------------
+! SPRUNG MASS
+!------------------------------------------------------------------------------------
+! The following parameters apply for the sprung mass without payloads, designated
+! SU (sprung mass unladen). If any payloads are attached, the combined inertia
+! properties (SU sprung mass + payloads) are also listed and designated SL (sprung
+! mass laden).
+
+H_CG_SU           540 ; mm ! Height of CG of sprung mass, unladen (SU) [I]
+LX_CG_SU         1015 ; mm ! X distance SU CG is behind sprung mass origin [I]
+Y_CG_SU             0 ; mm ! Y coordinate of SU CG [I]
+M_SU             1270 ; kg ! Mass of unladen sprung mass (SU) [I]
+IXX_SU          536.6 ; kg-m2 ! Roll inertia for unladen sprung mass [I]
+IYY_SU         1536.7 ; kg-m2 ! Pitch inertia for SU [I]
+IZZ_SU         1536.7 ; kg-m2 ! Yaw inertia for SU [I]
+IXY_SU              0 ; kg-m2 ! XY product of inertia for SU [I]
+IXZ_SU              0 ; kg-m2 ! XZ product of inertia for SU [I]
+IYZ_SU              0 ; kg-m2 ! YZ product of inertia for SU [I]
+
+! N_PAYLOADS        0 ! No. of payloads attached to this sprung mass (read only)
+
+HT_SM            1405 ; mm ! Reference height of sprung mass (maybe for target)
+LEN_SM           4600 ; mm ! Reference length of sprung mass (maybe for target)
+WID_SM           2082 ; mm ! Reference width of sprung mass (maybe for target)
+LX_F_SM           800 ; mm ! Length from front to control pt (maybe for target)
+
+!------------------------------------------------------------------------------------
+! PAYLOADS
+!------------------------------------------------------------------------------------
+! NLOAD             0 ! Number of installed payloads (read only)
+
+!------------------------------------------------------------------------------------
+! AERODYNAMICS
+!------------------------------------------------------------------------------------
+! Aerodynamic coefficients are largely defined with the nonlinear Configurable
+! Functions xx_AERO_SHAPING (where xx = FX, FY, etc.). Wind speed and direction are
+! defined with the functions WIND_HEADING and WIND_SPEED.
+
+D_AIR           1.206 ; kg/m3 ! Air mass density
+
+AREA_AERO         2.2 ; m2 ! Frontal cross-section area
+H_REF_AERO          0 ; mm ! Height of aerodynamic reference point
+L_REF_AERO       2910 ; mm ! Aerodynamic reference length
+X_REF_AERO      -1455 ; mm ! X coordinate of aerodynamic reference point
+Y_REF_AERO          0 ; mm ! Y coordinate of aerodynamic reference point
+
+!------------------------------------------------------------------------------------
+! SUSPENSION GEOMETRY AND INERTIA
+!------------------------------------------------------------------------------------
+! Suspension geometry is specified with the following parameters along with some
+! nonlinear Configurable Functions that can use tables of measured or simulated
+! suspension kinematical relationships. For independent suspensions, these include
+! the functions CAMBER, SUSP_DIVE, SUSP_LAT, SUSP_X, and TOE. All coordinate
+! parameters are relative to the origin of the sprung mass (SM) coordinate system.
+
+! Generic/independent suspension for axle 1
+OPT_IND_KIN(1)      0 ! CAMBER, SUSP_DIVE, SUSP_LAT, and SUSP_X apply to which
+                      ! reference frame? 0 -> kingpin (classic), 1 -> non-spinning
+                      ! wheel hub (installs IKU) [L]
+OPT_JNC_DESIGN(1)   1 ! Specify JNC_DESIGN (jounce when the wheel center is at the
+                      ! reference Z coordinate H_WC) explicitly? 1 -> yes, 0 -> no,
+                      ! calculate JNC_DESIGN from the ride spring data [I]
+A_CAMBER(1,1)       0 ; deg ! Static camber for wheel L1 [I]
+A_CAMBER(1,2)       0 ; deg ! Static camber for wheel R1 [I]
+A_TOE(1,1)          0 ; deg ! Static toe for wheel L1 [I]
+A_TOE(1,2)          0 ; deg ! Static toe for wheel R1 [I]
+H_WC(1,1)         325 ; mm ! Reference Z coordinate of wheel center L1 (in SM
+                      ! coordinate system) [I]
+H_WC(1,2)         325 ; mm ! Reference Z coordinate of wheel center R1 [I]
+! ISPIN(1,1)      1.6 ; kg-m2 ! CALC -- Spin inertia for wheel + tire L1 [I]
+! ISPIN(1,2)      1.6 ; kg-m2 ! CALC -- Spin inertia for wheel + tire R1 [I]
+! ISPIN_XXZZ(1,1) 0.85 ; kg-m2 ! CALC -- IXX/IZZ inertia for wheel + tire L1 [I]
+! ISPIN_XXZZ(1,2) 0.85 ; kg-m2 ! CALC -- IXX/IZZ inertia for wheel + tire R1 [I]
+IW(1,1)           0.1 ; kg-m2 ! Spin inertia for wheel L1 [I]
+IW(1,2)           0.1 ; kg-m2 ! Spin inertia for wheel R1 [I]
+IW_XXZZ(1,1)     0.05 ; kg-m2 ! IXX/IZZ inertia for wheel L1 [I]
+IW_XXZZ(1,2)     0.05 ; kg-m2 ! IXX/IZZ inertia for wheel R1 [I]
+JNC_DESIGN(1,1)     0 ; mm ! Jounce when center of wheel L1 is at the reference
+                      ! coordinate H_WC [I]
+JNC_DESIGN(1,2)     0 ; mm ! Jounce when center of wheel R1 is at H_WC [I]
+L_TRACK(1)       1675 ; mm ! Track width, wheel-center to wheel-center, axle 1 [I]
+LX_AXLE(1)          0 ; mm ! [D] X dist. axle 1 is behind the sprung-mass origin [I]
+M_US_IND(1,1)   12.13 ; kg ! Unsteered suspension mass for wheel L1 [I]
+M_US_IND(1,2)   12.13 ; kg ! Unsteered suspension mass for wheel R1 [I]
+M_US_STR(1,1)   32.17 ; kg ! Steered mass for wheel L1 [I]
+M_US_STR(1,2)   32.17 ; kg ! Steered mass for wheel R1 [I]
+! M_US(1)       132.6 ; kg ! CALC -- Total unsprung mass for axle 1
+! R_US_STR(1) 0.8170437406 ; - ! CALC -- Steered fraction of unsprung mass, axle 1
+Y_CL_SUSP(1)        0 ; mm ! Y coord. for suspension centerline, axle 1 [I]
+
+! Generic/independent suspension for axle 2
+OPT_IND_KIN(2)      0 ! CAMBER, SUSP_DIVE, SUSP_LAT, and SUSP_X apply to which
+                      ! reference frame? 0 -> kingpin (classic), 1 -> non-spinning
+                      ! wheel hub (installs IKU) [L]
+OPT_JNC_DESIGN(2)   1 ! Specify JNC_DESIGN explicitly for axle 2? [I]
+A_CAMBER(2,1)       0 ; deg ! Static camber for wheel L2 [I]
+A_CAMBER(2,2)       0 ; deg ! Static camber for wheel R2 [I]
+A_TOE(2,1)          0 ; deg ! Static toe for wheel L2 [I]
+A_TOE(2,2)          0 ; deg ! Static toe for wheel R2 [I]
+H_WC(2,1)         325 ; mm ! Reference Z coordinate of wheel center L2 [I]
+H_WC(2,2)         325 ; mm ! Reference Z coordinate of wheel center R2 [I]
+! ISPIN(2,1)      1.6 ; kg-m2 ! CALC -- Spin inertia for wheel + tire L2 [I]
+! ISPIN(2,2)      1.6 ; kg-m2 ! CALC -- Spin inertia for wheel + tire R2 [I]
+! ISPIN_XXZZ(2,1) 0.85 ; kg-m2 ! CALC -- IXX/IZZ inertia for wheel + tire L2 [I]
+! ISPIN_XXZZ(2,2) 0.85 ; kg-m2 ! CALC -- IXX/IZZ inertia for wheel + tire R2 [I]
+IW(2,1)           0.1 ; kg-m2 ! Spin inertia for wheel L2 [I]
+IW(2,2)           0.1 ; kg-m2 ! Spin inertia for wheel R2 [I]
+IW_XXZZ(2,1)     0.05 ; kg-m2 ! IXX/IZZ inertia for wheel L2 [I]
+IW_XXZZ(2,2)     0.05 ; kg-m2 ! IXX/IZZ inertia for wheel R2 [I]
+JNC_DESIGN(2,1)     0 ; mm ! Jounce when center of wheel L2 is at H_WC [I]
+JNC_DESIGN(2,2)     0 ; mm ! Jounce when center of wheel R2 is at H_WC [I]
+L_TRACK(2)       1675 ; mm ! Track width, wheel-center to wheel-center, axle 2 [I]
+LX_AXLE(2)       2910 ; mm ! X dist. axle 2 is behind the sprung-mass origin [I]
+M_US_IND(2,1)    27.2 ; kg ! Unsteered suspension mass for wheel L2 [I]
+M_US_IND(2,2)    27.2 ; kg ! Unsteered suspension mass for wheel R2 [I]
+M_US_STR(2,1)       0 ; kg ! Steered mass for wheel L2 [I]
+M_US_STR(2,2)       0 ; kg ! Steered mass for wheel R2 [I]
+! M_US(2)        98.4 ; kg ! CALC -- Total unsprung mass for axle 2
+! R_US_STR(2) 0.4471544715 ; - ! CALC -- Steered fraction of unsprung mass, axle 2
+Y_CL_SUSP(2)        0 ; mm ! Y coord. for suspension centerline, axle 2 [I]
+
+!------------------------------------------------------------------------------------
+! SUSPENSION SPRINGS AND DAMPERS
+!------------------------------------------------------------------------------------
+! Suspension springs and dampers are specified with the following parameters, along
+! with the nonlinear Configurable Functions CMP_DAMP, CMP_JSTOP, CMP_RSTOP,
+! CMP_SPR_SEAT, FD, F_JNC_STOP, F_REB_STOP, FS_COMP, FS_EXT, and MX_AUX. All
+! suspension models calculate compliance effects using the functions CC_FX, CI_FY,
+! CI_MZ, CS_FY, CS_MZ, and CT_FX. Independent suspensions also use the functions
+! CD_MY, C_LAT, and C_LONG.
+
+! Generic/independent suspension for axle 1
+OPT_EXT_SP(1,1)     0 ! External option for spring L1: 0 -> use built-in spring
+                      ! (with or without external model), 1 -> disable built-in
+                      ! spring and use an external model [I]
+OPT_EXT_SP(1,2)     0 ! Disable built-in spring R1? 0 -> no, 1 -> yes [I]
+OPT_SUSP_COMPLIANCE_METHOD(1) 1 ! [D] Subtract offset from each compliance table to
+                                ! avoid double-counting kinematical offset? 1 ->
+                                ! Yes, subtract the offset, 0 -> No, use compliance
+                                ! table as is [I]
+! CMP_DESIGN(1,1) 156.6131609 ; mm ! CALC -- Compression at design load, spring L1
+! CMP_DESIGN(1,2) 156.6131609 ; mm ! CALC -- Compression at design load, spring R1
+CMP_OFFSET(1,1)     0 ; mm ! Initial compression of external spring L1 [I]
+CMP_OFFSET(1,2)     0 ; mm ! Initial compression of external spring R1 [I]
+DAUX(1)             0 ; N-m-s/deg ! Auxiliary roll damping, axle 1
+! FSA_DESIGN(1) 8110.369149 ; N ! CALC -- Design Load (susp., unladen), axle 1
+! FSA_L(1) 8110.369149 ; N ! CALC -- Static suspension load, laden, axle  1
+FS_OFFSET(1,1)      0 ; N ! Force offset subtracted from built-in spring L1 [I]
+FS_OFFSET(1,2)      0 ; N ! Force offset subtracted from built-in spring R1 [I]
+! FS_STATIC(1,1) 4228.555343 ; N ! CALC -- Static spring force, laden, spring L1
+! FS_STATIC(1,2) 4228.555343 ; N ! CALC -- Static spring force, laden, spring R1
+! FZA_L(1) 9410.730939 ; N ! CALC -- Static ground load, laden, axle 1
+! FZA_UL(1) 9410.730939 ; N ! CALC -- Static ground load, unladen, axle 1
+! FZ_STATIC(1,1) 4705.365469 ; N ! CALC -- Static ground force, laden, wheel L1
+! FZ_STATIC(1,2) 4705.365469 ; N ! CALC -- Static ground force, laden, wheel R1
+! KA_ROLL(1) 1045.059817 ; N-m/deg ! CALC -- Total roll stiffness, axle 1
+L_SPG_ADJ(1,1)      0 ; mm ! Upper seat height increase for spring L1 to reduce
+                      ! spring compression [I]
+L_SPG_ADJ(1,2)      0 ; mm ! Upper seat height increase for spring R1 [I]
+SPRING_COMP_BETA(1,1) 2 ; mm ! Reference hysteretic compression (1/3 of the
+                        ! compression needed to go from the lower force boundary to
+                        ! the upper force boundary) for ride spring L1 
+SPRING_COMP_BETA(1,2) 2 ; mm ! Ref. hysteretic compression, ride spring R1
+SPRING_EXT_BETA(1,1) 2 ; mm ! Ref. hysteretic extension, ride spring L1
+SPRING_EXT_BETA(1,2) 2 ; mm ! Ref. hysteretic extension, ride spring R1
+
+! Generic/independent suspension for axle 2
+OPT_EXT_SP(2,1)     0 ! Disable built-in spring L2? 0 -> no, 1 -> yes [I]
+OPT_EXT_SP(2,2)     0 ! Disable built-in spring R2? 0 -> no, 1 -> yes [I]
+OPT_SUSP_COMPLIANCE_METHOD(2) 1 ! [D] Adjust compliance tables to avoid
+                                ! double-counting? 1 -> Adjust, 0 -> No [I]
+! CMP_DESIGN(2,1) -11.2576049 ; mm ! CALC -- Compression at design load, spring L2
+! CMP_DESIGN(2,2) -11.2576049 ; mm ! CALC -- Compression at design load, spring R2
+CMP_OFFSET(2,1)     0 ; mm ! Initial compression of external spring L2 [I]
+CMP_OFFSET(2,2)     0 ; mm ! Initial compression of external spring R2 [I]
+DAUX(2)             0 ; N-m-s/deg ! Auxiliary roll damping, axle 2
+! FSA_DESIGN(2) 4344.076351 ; N ! CALC -- Design Load (susp., unladen), axle 2
+! FSA_L(2) 4344.076351 ; N ! CALC -- Static suspension load, laden, axle  2
+FS_OFFSET(2,1)      0 ; N ! Force offset subtracted from built-in spring L2 [I]
+FS_OFFSET(2,2)      0 ; N ! Force offset subtracted from built-in spring R2 [I]
+! FS_STATIC(2,1) 2725.267473 ; N ! CALC -- Static spring force, laden, spring L2
+! FS_STATIC(2,2) 2725.267473 ; N ! CALC -- Static spring force, laden, spring R2
+! FZA_L(2) 5309.050711 ; N ! CALC -- Static ground load, laden, axle 2
+! FZA_UL(2) 5309.050711 ; N ! CALC -- Static ground load, unladen, axle 2
+! FZ_STATIC(2,1) 2654.525356 ; N ! CALC -- Static ground force, laden, wheel L2
+! FZ_STATIC(2,2) 2654.525356 ; N ! CALC -- Static ground force, laden, wheel R2
+! KA_ROLL(2) 1092.583222 ; N-m/deg ! CALC -- Total roll stiffness, axle 2
+L_SPG_ADJ(2,1)      0 ; mm ! Upper seat height increase for spring L2 [I]
+L_SPG_ADJ(2,2)      0 ; mm ! Upper seat height increase for spring R2 [I]
+SPRING_COMP_BETA(2,1) 2 ; mm ! Ref. hysteretic compression, ride spring L2
+SPRING_COMP_BETA(2,2) 2 ; mm ! Ref. hysteretic compression, ride spring R2
+SPRING_EXT_BETA(2,1) 2 ; mm ! Ref. hysteretic extension, ride spring L2
+SPRING_EXT_BETA(2,2) 2 ; mm ! Ref. hysteretic extension, ride spring R2
+
+!------------------------------------------------------------------------------------
+! STEERING
+!------------------------------------------------------------------------------------
+! The steering system is specified with the following parameters along with the
+! nonlinear Configurable Functions F_BOOST_R, GEAR_ROT, M_BOOST_G, M_SW, M_TBAR,
+! MZ_PARKING_STEER, RACK_KIN, RACK_TRAVEL, R_STEER_SPEED, STEER_COMP, and
+! STEER_KIN. Open-loop steering can be specified with the function STEER_SW (angle
+! control) or M_STR_IN (torque control).
+
+OPT_M_SW_CALC       1 ! Option for calculating steering wheel torque when the angle
+                      ! is controlled (OPT_STR_BY_TRQ = 0): 0 -> from table, 1 ->
+                      ! calculated (see the steering Help document for details) [I]
+OPT_POWER           1 ! Power steering? 0 -> No, 1 -> Rack or Gear assist, 2 ->
+                      ! Column assist [I]
+OPT_STEER_DEF       1 ! How are steer angles of knuckles defined? 1 -> as in K&C
+                      ! test, 0 -> rotation angle about a kingpin axis
+OPT_I_GEAR_IN       0 ! Add wheel and suspension inertias for axle 1 to I_GEAR_IN? 0
+                      ! -> no, 1 = yes [I]
+BETA_COL          0.1 ; deg ! Ref hysteretic angle for steering column friction
+D_COL           0.002 ; N-m-s/deg ! Steering column viscous damping
+D_TBAR              0 ; N-m-s/deg ! [D] Torsion bar viscous damping
+HYS_COL           0.2 ; N-m ! Steering column friction torque
+I_COL            0.02 ; kg-m2 ! Steering column inertia used with torque input
+I_GEAR_IN      0.0003 ; kg-m2 ! Steering system inertia
+F_BOOST_MAX      3000 ; N ! Maximum power steering boost force
+TC_BOOST         0.02 ; s ! Time constant for power steering boost
+A_STR_STOP_L      -45 ; deg ! Steer angle limit during torque control (Left)
+A_STR_STOP_R       45 ; deg ! Steer angle limit during torque control (Right)
+K_STR_STOP_L        0 ; N-m/deg ! Steering stop stiffness (Left)
+K_STR_STOP_R        0 ; N-m/deg ! Steering stop stiffness (Right)
+
+OPT_STEER_EXT(1)    0 ! Steer model option for axle 1: 0 -> Internal model, 1 -> Not
+                      ! steered, 2 -> External gear/rack, 3 -> External except
+                      ! tie-rod linkage, 4 -> Full external model [I]
+OPT_CS(1)           0 ! [D] Compliance steer option, axle 1: 0 -> symmetric, 1 ->
+                      ! control L wheel, 2 -> control R wheel
+OPT_RACK(1)         1 ! Steer gear type: 0 -> Recirc. ball, 1 -> Rack & pinion [I]
+A_CASTER(1,1)       3 ; deg ! Caster for wheel L1 [I]
+A_CASTER(1,2)       3 ; deg ! Caster for wheel R1 [I]
+A_KPI(1,1)       13.5 ; deg ! Kingpin inclination for wheel L1 [I]
+A_KPI(1,2)       13.5 ; deg ! Kingpin inclination for wheel R1 [I]
+A_MZ_BETA(1,1)      5 ; deg ! Ref. hysteresis angle for L1 parking steer torque
+A_MZ_BETA(1,2)      5 ; deg ! Ref. hysteresis angle for R1 parking steer torque
+BETA_RACK(1)      0.1 ; mm ! Ref hys. displ. for steering rack friction, axle 1
+D_RACK(1)         4.5 ; N-s/mm ! Steering rack viscous damping, axle 1
+HYS_RACK(1)       250 ; N ! Steering rack hysteresis, axle 1
+L_KPO(1,1)       75.5 ; mm ! Lateral kingpin offset to center of wheel L1 [I]
+L_KPO(1,2)       75.5 ; mm ! Lateral kingpin offset to center of wheel R1 [I]
+X_KPO(1,1)          0 ; mm ! X coord. of kingpin at center of wheel L1 [I]
+X_KPO(1,2)          0 ; mm ! X coord. of kingpin at center of wheel R1 [I]
+
+OPT_STEER_EXT(2)    1 ! Steer model option for axle 2: 1 -> Not steered, 0 ->
+                      ! Internal model, 2 -> External gear/rack, 3 -> External
+                      ! except tie-rod linkage, 4 -> Full external model [I]
+
+!------------------------------------------------------------------------------------
+! TIRES
+!------------------------------------------------------------------------------------
+! Tire behavior is specified with the following parameters. Depending on the
+! selected options, the following nonlinear Configurable Functions might also be
+! used: FX_TIRE, FY_TIRE, FYG_TIRE, FZ_TIRE, KGAMMA, L_CONTACT_X, L_CONTACT_Y,
+! L_RELAX_X, L_RELAX_Y, MX_TIRE, MXG_TIRE, MZ_TIRE, STI_TYPARR, and Z_PROFILE.
+
+VLOW_DRIFT_X      0.1 ; km/h ! [D] Low speed limit: allow near-static Fx to avoid
+                      ! drift when stopped on a grade
+VLOW_DRIFT_Y      0.1 ; km/h ! [D] Low speed limit: allow near-static Fy to avoid
+                      ! drift when stopped on a grade
+
+OPT_TIRE_MODEL(1,1) 1 ! Internal tire shear-model option, tire L1: 1 -> original
+                      ! tabular model; 0 -> fully external model; 2 -> built-in
+                      ! lags; 3 -> built-in for Fx, My, and lags; 6 -> tabular with
+                      ! camber extensions; 8 -> SIEMENS Delft-Tyre; 9 -> COSIN
+                      ! FTire; 10 -> third-party STI tire model [I]
+OPT_TIRE_COMB(1,1)  0 ! Option for combined slip calculation: 0 -> use only
+                      ! theoretical combined slip; 1 -> use transition between the
+                      ! normalized and theoretical combined slip
+OPT_TIRE_LAG_ALPHA(1,1) 1 ! Options for handling lag in tire alpha: 1 -> transition
+                          ! to using instant slip when the time constant is less
+                          ! than 12*TSTEP, 0 -> use fixed time constant 12*TSTEP at
+                          ! high speeds
+OPT_TIRE_LAG_KAPPA(1,1) 2 ! Options for handling lag in tire kappa: 2 -> use instant
+                          ! slip when absolute kappa is decreasing and transition
+                          ! to instant slip when the time constant is less than
+                          ! 12*TSTEP; 1 -> transition to instant slip when the time
+                          ! constant is less than 12*TSTEP; 0 -> use fixed time
+                          ! constant 12*TSTEP at high speeds
+FZ_MAX(1,1)    100000 ; N ! Maximum allowed vertical force, tire L1 [I]
+FZ_REF(1,1)      6500 ; N ! Reference vertical force: Not used directly in the VS
+                      ! Math Model; provided as a standard reference for advanced
+                      ! users to scale other parameters and Configurable Functions
+                      ! for this tire
+IT(1,1)           1.5 ; kg-m2 ! Spin inertia for tire L1 [I]
+IT_XXZZ(1,1)      0.8 ; kg-m2 ! XX/ZZ inertia for tire L1 [I]
+M_TIRE(1,1)        22 ; kg ! Mass of tire L1
+MU_REF_X(1,1)       1 ; - ! Ground friction during meas. of Fx data, tire L1
+MU_REF_Y(1,1)       1 ; - ! Ground friction during meas. of Fy data, tire L1
+R0(1,1)           334 ; mm ! Free (unloaded) radius (if 0, R0 is set to RRE) [I]
+RRE(1,1)          325 ; mm ! Effective rolling radius (Vx/AVy), tire L1 [I]
+RR_C(1,1)      0.0038 ; - ! Rolling resistance: MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+RR_FX(1,1)          1 ; - ! Switch: 0 -> do not add the effect of tire Fx to the
+                      ! rolling resistance moment MyRR; 1 add the effect
+RR_V(1,1)     2.6e-05 ; h/km ! Rolling resistance: MyRR = R*Fz*RR_surf*(RR_c +
+                      ! RR_v*Vx)
+VLOW_ALPHA(1,1)     2 ; km/h ! Minimum Vx used in ODE for lagged alpha
+VLOW_DAMP_Y(1,1)    0 ; km/h ! [D] Low speed when damping is added to Fy
+VLOW_KAPPA(1,1)     2 ; km/h ! Minimum Vx used in ODE for lagged kappa
+
+OPT_TIRE_MODEL(1,2) 1 ! Internal tire shear-model option, R1 [I]
+OPT_TIRE_COMB(1,2)  0 ! Option for combined slip calculation
+OPT_TIRE_LAG_ALPHA(1,2) 1 ! Options for handling lag in alpha
+OPT_TIRE_LAG_KAPPA(1,2) 2 ! Options for handling lag in kappa
+FZ_MAX(1,2)    100000 ; N ! Maximum allowed vertical force, tire R1 [I]
+FZ_REF(1,2)      6500 ; N ! Reference vertical force
+IT(1,2)           1.5 ; kg-m2 ! Spin inertia for tire R1 [I]
+IT_XXZZ(1,2)      0.8 ; kg-m2 ! XX/ZZ inertia for tire R1 [I]
+M_TIRE(1,2)        22 ; kg ! Mass of tire R1
+MU_REF_X(1,2)       1 ; - ! Ground friction during meas. of Fx data, tire R1
+MU_REF_Y(1,2)       1 ; - ! Ground friction during meas. of Fy data, tire R1
+R0(1,2)           334 ; mm ! Free (unloaded) radius (if 0, R0 is set to RRE) [I]
+RRE(1,2)          325 ; mm ! Effective rolling radius (Vx/AVy), tire R1 [I]
+RR_C(1,2)      0.0038 ; - ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+RR_FX(1,2)          1 ; - ! 0 -> do not add Fx effect to MyRR; 1 -> add it
+RR_V(1,2)     2.6e-05 ; h/km ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+VLOW_ALPHA(1,2)     2 ; km/h ! Minimum Vx used in ODE for lagged alpha
+VLOW_DAMP_Y(1,2)    0 ; km/h ! [D] Low speed when damping is added to Fy
+VLOW_KAPPA(1,2)     2 ; km/h ! Minimum Vx used in ODE for lagged kappa
+
+OPT_TIRE_MODEL(2,1) 1 ! Internal tire shear-model option, L2 [I]
+OPT_TIRE_COMB(2,1)  0 ! Option for combined slip calculation
+OPT_TIRE_LAG_ALPHA(2,1) 1 ! Options for handling lag in alpha
+OPT_TIRE_LAG_KAPPA(2,1) 2 ! Options for handling lag in kappa
+FZ_MAX(2,1)    100000 ; N ! Maximum allowed vertical force, tire L2 [I]
+FZ_REF(2,1)      6500 ; N ! Reference vertical force
+IT(2,1)           1.5 ; kg-m2 ! Spin inertia for tire L2 [I]
+IT_XXZZ(2,1)      0.8 ; kg-m2 ! XX/ZZ inertia for tire L2 [I]
+M_TIRE(2,1)        22 ; kg ! Mass of tire L2
+MU_REF_X(2,1)       1 ; - ! Ground friction during meas. of Fx data, tire L2
+MU_REF_Y(2,1)       1 ; - ! Ground friction during meas. of Fy data, tire L2
+R0(2,1)           334 ; mm ! Free (unloaded) radius (if 0, R0 is set to RRE) [I]
+RRE(2,1)          325 ; mm ! Effective rolling radius (Vx/AVy), tire L2 [I]
+RR_C(2,1)      0.0038 ; - ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+RR_FX(2,1)          1 ; - ! 0 -> do not add Fx effect to MyRR; 1 -> add it
+RR_V(2,1)     2.6e-05 ; h/km ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+VLOW_ALPHA(2,1)     2 ; km/h ! Minimum Vx used in ODE for lagged alpha
+VLOW_DAMP_Y(2,1)    0 ; km/h ! [D] Low speed when damping is added to Fy
+VLOW_KAPPA(2,1)     2 ; km/h ! Minimum Vx used in ODE for lagged kappa
+
+OPT_TIRE_MODEL(2,2) 1 ! Internal tire shear-model option, R2 [I]
+OPT_TIRE_COMB(2,2)  0 ! Option for combined slip calculation
+OPT_TIRE_LAG_ALPHA(2,2) 1 ! Options for handling lag in alpha
+OPT_TIRE_LAG_KAPPA(2,2) 2 ! Options for handling lag in kappa
+FZ_MAX(2,2)    100000 ; N ! Maximum allowed vertical force, tire R2 [I]
+FZ_REF(2,2)      6500 ; N ! Reference vertical force
+IT(2,2)           1.5 ; kg-m2 ! Spin inertia for tire R2 [I]
+IT_XXZZ(2,2)      0.8 ; kg-m2 ! XX/ZZ inertia for tire R2 [I]
+M_TIRE(2,2)        22 ; kg ! Mass of tire R2
+MU_REF_X(2,2)       1 ; - ! Ground friction during meas. of Fx data, tire R2
+MU_REF_Y(2,2)       1 ; - ! Ground friction during meas. of Fy data, tire R2
+R0(2,2)           334 ; mm ! Free (unloaded) radius (if 0, R0 is set to RRE) [I]
+RRE(2,2)          325 ; mm ! Effective rolling radius (Vx/AVy), tire R2 [I]
+RR_C(2,2)      0.0038 ; - ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+RR_FX(2,2)          1 ; - ! 0 -> do not add Fx effect to MyRR; 1 -> add it
+RR_V(2,2)     2.6e-05 ; h/km ! MyRR = R*Fz*RR_surf*(RR_c + RR_v*Vx)
+VLOW_ALPHA(2,2)     2 ; km/h ! Minimum Vx used in ODE for lagged alpha
+VLOW_DAMP_Y(2,2)    0 ; km/h ! [D] Low speed when damping is added to Fy
+VLOW_KAPPA(2,2)     2 ; km/h ! Minimum Vx used in ODE for lagged kappa
+
+!------------------------------------------------------------------------------------
+! BRAKES
+!------------------------------------------------------------------------------------
+! The brake system is specified with the following parameters along with the
+! nonlinear Configurable Functions BRAKE_COOL, F_BRAKE_PEDAL_BOOST, MY_BRAKE,
+! MY_BRAKE_TEMP, PBK_CALIPER, and PBK_DL. Open-loop braking can be specified with
+! the function F_BRAKE_PEDAL (pedal force) or PBK_CON (master cylinder pressure).
+
+LOCK_BK_R_FREQ     33 ; - ! [D] Ratio: simulation update frequency (1/dt) divided by
+                      ! torsional natural frequency of a wheel during brake lockup
+LOCK_BK_ZETA        2 ; - ! [D] Torsional damping ratio of each wheel during lockup
+
+OPT_BK_PEDAL        1 ! Brake input: 0 -> pressure (M/C), 1 -> pedal force (manual),
+                      ! 2 -> pedal force with boost
+D_MC               19 ; mm ! Master cylinder diameter, used to convert boosted pedal
+                      ! force to M/C pressure
+R_BK_PEDAL          6 ; - ! Brake pedal mechanical ratio: force multiplier
+
+OPT_BK_DYN(1,1)     1 ! Fluid dynamics: 1 -> time constant for actuator pressure, 2
+                      ! -> hydraulic resistance for flow into actuator, 0 -> no
+                      ! dynamics (instant actuator response)
+OPT_BK_THERMAL(1,1) 0 ! [D] Brake L1 thermal effects (fade)? 0 -> no, 1 -> yes
+MY_FRICTION(1,1)  0.5 ; N-m ! Bearing/brake friction, wheel L1
+TC_BK(1,1)       0.06 ; s ! Time constant for brake actuator L1
+TLAG_BK(1,1)        0 ; s ! Transport time delay for fluid to reach brake L1 [I]
+
+OPT_BK_DYN(1,2)     1 ! Dynamics: 1 -> time const., 2 -> hyd. res., 0 -> none
+OPT_BK_THERMAL(1,2) 0 ! [D] Brake R1 thermal effects (fade)? 0 -> no, 1 -> yes
+MY_FRICTION(1,2)  0.5 ; N-m ! Bearing/brake friction, wheel R1
+TC_BK(1,2)       0.06 ; s ! Time constant for brake actuator R1
+TLAG_BK(1,2)        0 ; s ! Transport time delay for fluid to reach brake R1 [I]
+
+OPT_BK_DYN(2,1)     1 ! Dynamics: 1 -> time const., 2 -> hyd. res., 0 -> none
+OPT_BK_THERMAL(2,1) 0 ! [D] Brake L2 thermal effects (fade)? 0 -> no, 1 -> yes
+MY_FRICTION(2,1)  0.5 ; N-m ! Bearing/brake friction, wheel L2
+TC_BK(2,1)       0.06 ; s ! Time constant for brake actuator L2
+TLAG_BK(2,1)        0 ; s ! Transport time delay for fluid to reach brake L2 [I]
+
+OPT_BK_DYN(2,2)     1 ! Dynamics: 1 -> time const., 2 -> hyd. res., 0 -> none
+OPT_BK_THERMAL(2,2) 0 ! [D] Brake R2 thermal effects (fade)? 0 -> no, 1 -> yes
+MY_FRICTION(2,2)  0.5 ; N-m ! Bearing/brake friction, wheel R2
+TC_BK(2,2)       0.06 ; s ! Time constant for brake actuator R2
+TLAG_BK(2,2)        0 ; s ! Transport time delay for fluid to reach brake R2 [I]
+
+!------------------------------------------------------------------------------------
+! POWERTRAIN
+!------------------------------------------------------------------------------------
+! The powertrain model is specified with the following parameters along with up to
+! 25 nonlinear Configurable Functions. Open-loop throttle request can be specified
+! with the function THROTTLE_ENGINE.
+
+INSTALL_POWERTRAIN  3 ! Powertrain type: 0 -> Simple, 1 -> FWD, 2 -> RWD, 3 -> AWD
+                      ! [L]
+! R_REAR_DRIVE_SC 0.5 ; - ! Drive torque ratio: [rear axle]/[total] [I]
+OPT_HEV             2 ! Propulsion types: 0 -> internal-combustion engine, 1 ->
+                      ! power-split hybrid electric, 2 -> electric, 3 ->
+                      ! range-extended electric (series hybrid), 4 -> parallel
+                      ! hybrid electric
+OPT_MOTOR_ON_AXLE   1 ! Is electric motor placed on each drive axle?: 0 -> No, a
+                      ! motor per vehicle; 1 -> Yes, a motor per drive axle
+OPT_THROTTLE_DELAY  0 ! [D] Apply lag to requested throttle using time constants: 0
+                      ! -> no, 1 -> yes
+INSTALL_ELECTRIC_DRIVE_MOTORS  ! VS Command to install electric motors
+VLOW_IW             0 ; km/h ! [D] Increase wheel spin inertia below this speed to
+                      ! fix instability with some HIL systems; set 0 to disable
+
+! The powertrain differentials are specified with the following parameters and the
+! function M_DIFF_VISC.
+
+! NDIFF             3 ! Maximum number of differentials that can exist in this
+                      ! powertrain (read only)
+OPT_DIFF_INTERNAL(1) 1 ! Front diff model: 1 -> internal, 0 -> external [I]
+OPT_LOCKED_DIFF(1)  0 ! Is the front diff locked? 0 -> no, 1 -> yes [I]
+LOCKED_DIFF_DAMP(1) 0.8 ; N-m-s/deg ! Torsional damping for locked front diff [I]
+LOCKED_DIFF_K(1)   80 ; N-m/deg ! Torsional spring rate for locked front diff [I]
+R_EFF_F_DIFF(1)  0.99 ; - ! Forward efficiency of front diff [I]
+R_EFF_R_DIFF(1)  0.99 ; - ! Reverse efficiency of front diff [I]
+R_GEAR_DIFF(1)  3.905 ; - ! Gear ratio of front diff [I]
+IDS(1)          0.013 ; kg-m2 ! Spin inertia of front diff input shaft [I]
+OPT_MOTOR_ON_WHEEL(1) 1 ! Is electric motor placed on each wheel of front diff?: 0
+                        ! -> No, a motor per axle; 1 -> Yes, a motor per wheel
+IHS_L(1)        0.009 ; kg-m2 ! Spin inertia of left half shaft, front diff [I]
+IHS_R(1)        0.009 ; kg-m2 ! Spin inertia of right half shaft, front diff [I]
+OPT_WHEEL_MOTOR_REACTION(1) 0 ! If sus. is independent, where the electric motor on
+                              ! each wheel at front diff reacts to?: 0 -> sprung
+                              ! mass; 1 -> un-sprung mass
+OPT_CLUTCH_DIFF(1)  0 ! [D] Clutch control for front diff: 0 -> table lookup or
+                      ! external, 1 -> Torsen parameters, 2 -> yaw control. When 0
+                      ! or 2, functions CLUTCH_CON_DIFF and CLUTCH_TORQUE_DIFF are
+                      ! used. When 2, CLUTCH_TORQUE_DIFF2 is also used. [I]
+OPT_TWIN_CLUTCH(1)  0 ! [D] Twin clutches on front diff? 0 -> no, 1 -> yes. If 1,
+                      ! then functions CLUTCH_TWIN and M_TWIN are used. [I]
+
+OPT_DIFF_INTERNAL(2) 1 ! Rear diff model: 1 -> internal, 0 -> external [I]
+OPT_LOCKED_DIFF(2)  0 ! Is the rear diff locked? 0 -> no, 1 -> yes [I]
+LOCKED_DIFF_DAMP(2) 0.8 ; N-m-s/deg ! Torsional damping for locked rear diff [I]
+LOCKED_DIFF_K(2)   80 ; N-m/deg ! Torsional spring rate for locked rear diff [I]
+R_EFF_F_DIFF(2)  0.99 ; - ! Forward efficiency of rear diff [I]
+R_EFF_R_DIFF(2)  0.99 ; - ! Reverse efficiency of rear diff [I]
+R_GEAR_DIFF(2)  3.905 ; - ! Gear ratio of rear diff [I]
+IDS(2)          0.013 ; kg-m2 ! Spin inertia of rear diff input shaft [I]
+OPT_MOTOR_ON_WHEEL(2) 1 ! Electric motor per wheel/axle on rear diff
+IHS_L(2)        0.009 ; kg-m2 ! Spin inertia of left half shaft, rear diff [I]
+IHS_R(2)        0.009 ; kg-m2 ! Spin inertia of right half shaft, rear diff [I]
+OPT_WHEEL_MOTOR_REACTION(2) 0 ! Electric motor wheel torque at rear diff reacts to
+                              ! unsprung mass if sus. is independent
+OPT_CLUTCH_DIFF(2)  0 ! [D] Clutch control for rear diff: 0 -> table lookup or
+                      ! external, 1 -> Torsen parameters, 2 -> yaw control [I]
+OPT_TWIN_CLUTCH(2)  0 ! [D] Twin clutches on rear diff? 0 -> no, 1 -> yes [I]
+
+OPT_DIFF_INTERNAL(3) 1 ! Transfer case model: 1 -> internal, 0 -> external [I]
+OPT_LOCKED_DIFF(3)  0 ! [D] Is the transfer case locked? 0 -> no, 1 -> yes [I]
+R_REAR_BIAS(3)    0.5 ; - ! [D] Fraction: transfer case torque on the transfer case
+                      ! [I]
+LOCKED_DIFF_DAMP(3) 0.8 ; N-m-s/deg ! Torsional damping for locked transfer case [I]
+LOCKED_DIFF_K(3)   80 ; N-m/deg ! Torsional spring rate for locked transfer case [I]
+R_EFF_F_DIFF(3)  0.99 ; - ! Forward efficiency of transfer case [I]
+R_EFF_R_DIFF(3)  0.99 ; - ! Reverse efficiency of transfer case [I]
+R_GEAR_DIFF(3)      1 ; - ! Gear ratio of transfer case [I]
+IDS(3)              0 ; kg-m2 ! [D] Spin inertia of transfer case input shaft [I]
+OPT_CLUTCH_DIFF(3)  0 ! [D] Clutch control for transfer case: 0 -> table lookup or
+                      ! external, 1 -> Torsen parameters, 2 -> yaw control [I]
+
+! The Hybrid/Electric powertrain system parameters.
+
+TC_PWR_HYBRID_AV  0.8 ; s ! Time constant for hybrid/electric available power
+
+! The hybrid/electric powertrain battery parameters.
+
+N_BATTERY          60 ! Number of battery packs [I]
+T_BATTERY_INIT     40 ; C ! Initial battery temperature [I]
+BATTERY_CHARGE_INIT 0.6 ; - ! Initial battery charged level [I]
+V_MOTOR_MIN        60 ; V ! Minimum voltage for electric motor [I]
+V_BATTERY_MIN       6 ; V ! Minimum voltage per battery pack [I]
+V_BATTERY_MAX       9 ; V ! Maximum voltage per battery pack [I]
+
+! The hybrid/electric power management control parameters.
+
+PWR_EV_MODE        25 ; kW ! Maximum power allowance operated with EV mode [I]
+PWR_HEV_DRV_MAX    55 ; kW ! Maximum power available with HEV system (used by speed
+                      ! control only) [I]
+KPW_PBK_HEV        16 ; kW/MPa ! Brake power demand per master cylinder control
+                      ! pressure [I]
+OPT_REGEN_OFF_THRT  0 ; - ! Charge battery when vehicle is coasting with off
+                      ! throttle and off brakeing: 0 -> no, 1 -> yes [I]
+CF_HEV_PBK       0.08 ; - ! [D] Control shape factor for regenerative motor power
+                      ! around zero speed [I]
+REGEN_BRK_OFF     0.8 ; - ! Battery charged level to turn off regenerative brake [I]
+
+! The hybrid/electric powertrain motor parameters.
+
+R_REAR_MOTOR_BIAS(3) 0.5 ; - ! Fraction: motor torque distributed on rear drive axle
+                         ! [I]
+
+! The hybrid/electric powertrain axle/wheel motor parameters.
+
+I_MOTOR(1,1)   0.0226 ; kg-m2 ! Spin inertia of electric motor on left wheel of
+                      ! front drive axle [I]
+TC_MOTOR(1,1)    0.05 ; s ! Time constant for electric motor torque on left wheel of
+                      ! front drive axle
+I_MOTOR(1,2)   0.0226 ; kg-m2 ! Spin inertia of electric motor on right wheel of
+                      ! front drive axle [I]
+TC_MOTOR(1,2)    0.05 ; s ! Time constant for electric motor torque on right wheel
+                      ! of front drive axle
+I_MOTOR(2,1)   0.0226 ; kg-m2 ! Spin inertia of electric motor on left wheel of rear
+                      ! drive axle [I]
+TC_MOTOR(2,1)    0.05 ; s ! Time constant for electric motor torque on left wheel of
+                      ! rear drive axle
+I_MOTOR(2,2)   0.0226 ; kg-m2 ! Spin inertia of electric motor on right wheel of
+                      ! rear drive axle [I]
+TC_MOTOR(2,2)    0.05 ; s ! Time constant for electric motor torque on right wheel
+                      ! of rear drive axle
+
+!------------------------------------------------------------------------------------
+! REFERENCE PATHS
+!------------------------------------------------------------------------------------
+! Up to 500 reference paths may be installed to provide station-based coordinate
+! systems used to define 3D road surfaces, targets for the driver model, and
+! positions of moving objects. In addition to the parameters shown in this section,
+! the paths may include spline X-Y tables (keyword = SEGMENT_XY_TABLE).
+
+OPT_SL_METHOD       1 ! [D] Use curvature in iteration for S-L from X-Y? 1 -> yes, 0
+                      ! -> no
+TOL_SL_METHOD       1 ; mm ! [D] Stop iteration if X-Y from S-L solution is no
+                      ! further from requested X-Y than this
+! NPATH             1 ! Number of installed paths available for roads, driver model,
+                      ! and moving objects (read only)
+DEFINE_PATHS        1 ! VS Command to install reference paths
+
+PATH_ID(1)          1 ; Straight East
+OPT_PATH_START(1)   0 ! Set initial heading and X-Y coordinates of the path? 0 -> no
+                      ! (legacy, using table data), 1 -> yes
+OPT_PATH_LOOP(1)    0 ! Is this path looped? 0 -> no, 1 -> yes
+SPATH_START(1)      0 ; m ! Station at the start of this path
+! HEADING_START(1)  0 ; deg ! Heading at the start of this path
+! X_PATH_START(1)   0 ; m ! Global X coordinate at the start of this path
+! Y_PATH_START(1)   0 ; m ! Global Y coordinate at the start of this path
+
+NSEGMENTS(1)        1 ! Number of segments in this path
+SEGMENT_TYPE(1,1)   0 ! 0 -> straight, 1 -> table, 2 -> rho, 3 -> radius, 4 -> cloth
+SEGMENT_LENGTH(1,1) 100 ; m ! Segment length
+! S_SEGMENT_END(1,1) 100 ; m ! CALC -- Station at end of this segment
+! X_SEGMENT_END(1,1) 100 ; m ! CALC -- X coordinate at end of segment
+! Y_SEGMENT_END(1,1) 0 ; m ! CALC -- Y coordinate at end of segment
+! HEADING_END(1,1)  0 ; deg ! CALC -- Heading at end of segment
+
+!------------------------------------------------------------------------------------
+! ROAD SURFACES
+!------------------------------------------------------------------------------------
+! Road surfaces define elevation Z and friction MU as functions of global X and Y
+! coordinates, using a station-based coordinate system defined with a Reference
+! Path. Up to 200 surfaces may be installed to represent sections, intersections,
+! multiple lanes, etc. The Z, MU, and RR_SURF values for a road surface are
+! provided with Configurable Functions MU_ROAD, ROAD_DZ, RR_SURF, and ROAD_ZS.
+! Boundaries that control automatic switching from one road surface to another make
+! use of the Configurable Functions ROAD_L_BOUNDARY, ROAD_NEW_ID, and ROAD_NEW_S.
+
+! NROAD             1 ! Number of installed road surfaces (read only)
+NROAD_DZ            0 ! [D] Number of ROAD_DZ datasets
+DEFINE_ROADS        1 ! VS Command to define road surfaces
+CURRENT_ROAD_ID     1 ! ROAD_ID during initialization [I]
+
+ROAD_ID(1)          1 ; 2 km Square, Mu = 1.0
+ROAD_PATH_ID(1)     1 ; PATH_ID for: Straight East
+ROAD_SMAX_NEW_ID(1) 0 ! [D] 0 -> No SMAX limit, -1 -> stop if S > ROAD_SMAX, > 0 ->
+                      ! switch to road with this ID if S > ROAD_SMAX
+ROAD_SMIN_NEW_ID(1) 0 ! [D] 0 -> No SMIN limit, -1 -> stop if S < ROAD_SMIN, > 0 ->
+                      ! switch to road with this ID if S < ROAD_SMIN
+ROAD_N_DZ(1)        0 ! [D] Number of ROAD_DZ layers added to the surface
+
+!------------------------------------------------------------------------------------
+! DRIVER MODEL: STEERING CONTROLLER AND VEHICLE REFERENCE PATH
+!------------------------------------------------------------------------------------
+! The built-in steering controller is a closed-loop path follower that calculates
+! steering wheel angle in order to follow a specified lateral offset (LTARG_ID =
+! LTARG_ID_DM) relative to a specified reference path (PATH_ID = PATH_ID_DM).
+! Preview time is calculated with the Configurable Function TPREV.
+
+N_LTARG             0 ! [D] Number of LTARG datasets that are used in this run
+
+PATH_ID_DM          1 ! PATH_ID of the vehicle and DM reference path [I]
+LTARG_ID_DM         0 ! [D] LTARG_ID of LTARG dataset for DM (0 -> LTARG = 0) [I]
+OPT_INIT_PATH       0 ! Set Xo, Yo, and Yaw to match path PATH_ID_DM and LTARG_ID_DM
+                      ! at station SSTART? 1 -> yes, 0 -> no [I]
+OPT_DIRECTION       1 ! Travel direction along path PATH_ID_DM: 0 -> set to 1 or -1
+                      ! using SSTART and SSTOP values (legacy); 1 -> increasing
+                      ! station, -1 -> decreasing station [I]
+
+OPT_DM              0 ! [D] Driver model option: 0 -> no driver model; 1 -> use
+                      ! linear dynamic model and 10 preview points; 2 -> same as 1,
+                      ! but with no rear steer effect (legacy); 3 -> use geometry
+                      ! and a single preview point [I]
+OPT_STR_BY_TRQ      0 ! [D] Control by steering wheel torque? 0 -> no, 1 -> yes [I]
+
+! NPREVIEW          0 ! No. of installed preview sensors for external DM (read only)
+
+!------------------------------------------------------------------------------------
+! DRIVER MODEL: SPEED CONTROLLER
+!------------------------------------------------------------------------------------
+N_SPEED_TARGET      0 ! [D] Number of SPEED_TARGET datasets for driver model, moving
+                      ! objects, and VS Commands that are written below: 0 - 200
+
+INSTALL_SPEED_CONTROLLER  ! VS Command to install the built-in speed controller
+! The speed controller uses throttle and braking controls to follow target speed
+! specified as a function of time and/or station along reference path PATH_ID_DM.
+! The target speed is specified with Configurable Function SPEED_TARGET. If the
+! speed is based on the path, then acceleration limits are specified using
+! functions SPEED_AX_BRAKE, SPEED_AX_THROTTLE, SPEED_AY_LEFT, and SPEED_AY_RIGHT.
+
+OPT_SC              0 ! Speed controller: 0 -> Off (open-loop), 1 - 3, target speed
+                      ! is function of time and station, 4 -> target speed is
+                      ! determined using path preview, 5 -> use acceleration
+                      ! command Ax_SCcmd [I]
+
+!------------------------------------------------------------------------------------
+! MOTION SENSORS
+!------------------------------------------------------------------------------------
+GPS_REF_ALT       250 ; m ! [D] GPS altitude when Z = 0
+GPS_REF_LAT    42.231 ; deg ! [D] GPS latitude when Y = GPS_REF_Y [I]
+GPS_REF_LONG  -83.727 ; deg ! [D] GPS longitude at GPS_REF_X and GPS_REF_Y
+GPS_RANGE_Y      5000 ; m ! [D] Range in Y allowed before a GPS reset
+GPS_REF_X           0 ; m ! [D] X coordinate at GPS_REF_LAT and GPS_REF_LONG
+GPS_REF_Y           0 ; m ! [D] Y coordinate at GPS_REF_LAT
+
+! NSENSOR_M         0 ! Number of installed custom motion sensors (read only)
+
+!------------------------------------------------------------------------------------
+! REFERENCE POINTS AND IMPORTED FORCES
+!------------------------------------------------------------------------------------
+! NREF_PT           0 ! Number of installed reference points and forces (read only)
+
+!------------------------------------------------------------------------------------
+! CONFIGURABLE FUNCTIONS
+!------------------------------------------------------------------------------------
+
+
+END
