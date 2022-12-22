@@ -1,7 +1,6 @@
 # custom
 .pypirc
-/Results/*
-/Results/.gitkeep
+/Results/
 /outputs/*
 /outputs/.gitkeep
 /results/*

@@ -1,15 +1,13 @@
-""" class to plot manipulator """
+""" core functions of pycarsimlib """
 
 import os
 import sys
 import struct
 import platform
-import time
 import shutil
 from pycarsimlib.api import vs_solver
 from datetime import timedelta
 from ctypes import cdll
-from time import sleep
 from typing import Union, List, Dict, Any
 from pycarsimlib.logger import initialize_logging
 from pycarsimlib.models.normal_vehicle import NormalVehicle
@@ -112,8 +110,8 @@ class CarsimManager:
 
     def reset(self):
         """ reset """
-        # 未実装. クローズすると戻れない. 初期状態に戻したいが, 実装が難しい.
-        pass
+        # under developing
+        raise NotImplementedError
 
     def step(self, action, delta_time):
         """ step run of carsim for delta_time with given action """
@@ -124,18 +122,17 @@ class CarsimManager:
             # Run the integration loop
             self.t_current += self.t_step  # increment the time
 
-            # エラーハンドリング必要.
-
             # reshape dict to list
             import_array = []
             for key in self.import_label_array:
-                import_array.append(action[key])
+                if key in action:
+                    import_array.append(action[key])
+                else:
+                    logger.error("Invalid format of carsim action.")
+                    raise AttributeError
 
             # call vs_api function
             status, self.export_array = self.solver_api.integrate_io(self.t_current, import_array, self.export_array)
-
-            # dummy info
-            info = ""
 
         return dict(zip(self.export_label_array, self.export_array)), status, self.t_current
 
@@ -150,7 +147,7 @@ class CarsimManager:
             print("ERROR OCCURRED:  ")
             self.solver_api.print_error()
             sys.exit(error_occurred)
-        logger.info("##### Ending run #####")
+        logger.info("##### End of simulation #####")
 
     def close(self):
         """ close carsim solver normally"""
@@ -158,7 +155,7 @@ class CarsimManager:
         logger.info("Carsim solver terminated normally.")
 
     def save_results_into_carsimdb(self, results_source_dir, results_target_dir):
-        """ copy latest  """
+        """ copy latest results dir into carsimdb location """
         logger.info(f"Saving results into {results_target_dir}")
         shutil.copytree(results_source_dir, results_target_dir, dirs_exist_ok=True)
         logger.info("Successfully saved results.")
