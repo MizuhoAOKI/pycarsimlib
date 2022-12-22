@@ -1,4 +1,5 @@
 # pycarsimlib
+An easy-to-use wrapper library to call carsim solver from python script.
 
 # Environmental setup
 
