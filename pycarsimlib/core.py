@@ -5,6 +5,7 @@ import sys
 import struct
 import platform
 import time
+import shutil
 from pycarsimlib.api import vs_solver
 from datetime import timedelta
 from ctypes import cdll
@@ -107,12 +108,11 @@ class CarsimManager:
 
     def reset(self):
         """ reset """
-        self.close()
-        time.sleep(5.0)
-        self._init_carsim()
+        # クローズすると戻れない. 初期状態に戻したいが, 実装が難しい.
+        pass
 
     def step(self, action, delta_time):
-        """ step """
+        """ step run of carsim for delta_time with given action """
         # デバッグ中
         # import, export周りをmodels/からインポートしたクラス使って上手いことやる.
 
@@ -124,13 +124,14 @@ class CarsimManager:
             self.t_current += self.t_step  # increment the time
 
             # Steering Controller variables, based on previous exports
-            x_center_of_gravity = self.export_array[0]
-            y_center_of_gravity = self.export_array[1]
-            _degrees_to_radians_scale_factor = 180.0 / 3.1415
-            yaw = self.export_array[2] / _degrees_to_radians_scale_factor  # convert export deg to rad
+            # x_center_of_gravity = self.export_array[0]
+            # y_center_of_gravity = self.export_array[1]
+            # _degrees_to_radians_scale_factor = 180.0 / 3.1415
+            # yaw = self.export_array[2] / _degrees_to_radians_scale_factor  # convert export deg to rad
 
             # copy values for 3 variables that the VS solver will import
-            import_array = [-1.0, 10.0, 10.0] # actionを入れる.
+            # import_array = [-1.0, 10.0, 10.0] # actionを入れる.
+            import_array = action
 
             # Call the VS API integration function
             status, self.export_array = self.solver_api.integrate_io(self.t_current, import_array, self.export_array)
@@ -138,10 +139,10 @@ class CarsimManager:
             # dummy info
             info = ""
 
-        return [x_center_of_gravity, y_center_of_gravity, yaw], status, info
+        return self.export_array, status, info
 
     def run_all(self):
-        """ run all """
+        """ run all simulation steps at once """
         error_occurred = 1
         logger.info("##### Run all simulation steps #####")
         error_occurred = self.solver_api.run(
@@ -154,7 +155,11 @@ class CarsimManager:
         logger.info("##### Ending run #####")
 
     def close(self):
-        """ close """
-        # Terminate solver
+        """ close carsim solver normally"""
         self.solver_api.terminate_run(self.t_current)
         logger.info("Carsim solver terminated normally.")
+
+    def save_results_into_carsimdb(self, results_source_dir, results_target_dir):
+        """ copy latest  """
+        logger.info("Saving results.")
+        shutil.copytree(results_source_dir, results_target_dir, dirs_exist_ok=True)

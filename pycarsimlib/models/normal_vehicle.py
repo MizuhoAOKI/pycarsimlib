@@ -7,5 +7,3 @@ class NormalVehicle:
     def __init__(self) -> None:
         logger.info("Vehicle type : NormalVehicle")
         pass
-
-    

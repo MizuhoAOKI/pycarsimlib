@@ -25,7 +25,7 @@ def main() -> None:
     # run simulation steps
     try:
         for _ in track(range(total_sim_step), description="Running simulation..."):
-            observe, terminated, info = cm.step(action=[], delta_time=onestep_delta_time)
+            observe, terminated, info = cm.step(action=[30.0, 0.0, 1.0], delta_time=onestep_delta_time)
 
             # check termination flag
             if terminated:
@@ -38,3 +38,9 @@ def main() -> None:
 
     # close carsim
     cm.close()
+
+    # save results
+    cm.save_results_into_carsimdb(
+        results_source_dir=r"C:\Users\mizuho\carsim\Results",
+        results_target_dir=r"C:\Users\Public\Documents\CarSim2022.1_Data\Results"
+    )
