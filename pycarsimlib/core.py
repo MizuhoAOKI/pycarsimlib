@@ -5,6 +5,7 @@ import sys
 import struct
 import platform
 from pycarsimlib.api import vs_solver
+from datetime import timedelta
 from ctypes import cdll
 from time import sleep
 from typing import Union, List, Dict, Any
@@ -55,9 +56,14 @@ class CarsimManager:
         self.configuration = self.solver_api.read_configuration(self.simfile_path)
         self.t_current = self.configuration.get('t_start')
         self.t_step = self.configuration.get('t_step')
+
+        # ここらの変数受け渡しをかしこく指定する.
+        # Create import and export arrays based on sizes from VS solver
         self.import_array = [0.0, 0.0]
         self.export_array = self.solver_api.copy_export_vars(self.configuration.get('n_export'))
-
+        # 警告
+        # if (len(self.export_array) < 3):
+        #     print("At least three export parameters needed.")
 
     def _is_system_available(self):
         """ check if the carsim library is available in the system. """
@@ -102,45 +108,34 @@ class CarsimManager:
         self.close()
         self._init_carsim()
 
-    def step(self):
+    def step(self, action, delta_time):
         """ step """
         # デバッグ中
-        # 1ステップだけ実行に書き換える.
         # import, export周りをmodels/からインポートしたクラス使って上手いことやる.
 
-        degrees_to_radians_scale_factor = 180.0 / 3.1415
+        _loop_num = delta_time // timedelta(seconds=self.t_step)
 
-        # Create import and export arrays based on sizes from VS solver
-        # import_array = [0.0, 0.0]
-        # export_array = []
-        # export_array = self.solver_api.copy_export_vars(self.configuration.get('n_export')) # get export variables from vs solver
+        for _ in range(_loop_num):
 
-        # constants to show progress bar
-        status = 0
-
-        # Check that we have enough export variables
-        if (len(self.export_array) < 3):
-            print("At least three export parameters needed.")
-        else:
             # Run the integration loop
-            while status == 0:
-                self.t_current = self.t_current + self.t_step  # increment the time
+            self.t_current += self.t_step  # increment the time
 
-                # Steering Controller variables, based on previous exports
-                x_center_of_gravity = self.export_array[0]
-                y_center_of_gravity = self.export_array[1]
-                yaw = self.export_array[2] / degrees_to_radians_scale_factor  # convert export deg to rad
+            # Steering Controller variables, based on previous exports
+            x_center_of_gravity = self.export_array[0]
+            y_center_of_gravity = self.export_array[1]
+            _degrees_to_radians_scale_factor = 180.0 / 3.1415
+            yaw = self.export_array[2] / _degrees_to_radians_scale_factor  # convert export deg to rad
 
-                # logger.info(f"[x, y, yaw] = [{x_center_of_gravity}, {y_center_of_gravity}, {yaw}]")
+            # copy values for 3 variables that the VS solver will import
+            import_array = [-1.0, 10.0, 10.0] # actionを入れる.
 
-                # copy values for 3 variables that the VS solver will import
-                import_array = [-1.0, 10.0, 10.0]
+            # Call the VS API integration function
+            status, self.export_array = self.solver_api.integrate_io(self.t_current, import_array, self.export_array)
 
-                # Call the VS API integration function
-                status, self.export_array = self.solver_api.integrate_io(self.t_current, import_array, self.export_array)
+            # dummy info
+            info = ""
 
-            # Terminate solver
-            self.solver_api.terminate_run(self.t_current)
+        return [x_center_of_gravity, y_center_of_gravity, yaw], status, info
 
     def run_all(self):
         """ run all """
@@ -157,16 +152,6 @@ class CarsimManager:
 
     def close(self):
         """ close """
-        pass
-
-
-# if __name__ == "__main__":
-
-#     m = CarsimManager(
-#         simfile_path=r"C:\Users\Public\Documents\CarSim2022.1_Data\simfile.sim",
-#         vehicle_type="normal_vehicle",
-#     )
-
-
-
-
+        # Terminate solver
+        self.solver_api.terminate_run(self.t_current)
+        logger.info("Carsim solver terminated normally.")
