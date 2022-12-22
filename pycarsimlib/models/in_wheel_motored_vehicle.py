@@ -3,4 +3,5 @@
 class InWheelMotoredVehicle:
     """ class to define in-wheel-motored vehicle model """
     def __init__(self) -> None:
-        pass
+        # 未実装
+        raise NotImplementedError

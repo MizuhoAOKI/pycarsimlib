@@ -42,10 +42,13 @@ class CarsimManager:
         # initialize carsim solver
         self._init_carsim()
 
+        # announce
+        logger.info("Carsim solver has been initialized successfully.")
+
     def _init_carsim(self):
         """ init carsim """
+        # get solver instance
         self.solver_api = vs_solver.vs_solver()
-        self.system_word_size = (8 * struct.calcsize("P"))  # 32 or 64
         self.path_to_vs_dll = self.solver_api.get_dll_path(self.simfile_path)
 
         if not self._is_system_available():
@@ -56,17 +59,17 @@ class CarsimManager:
             logger.error("Carsim solver is invalid.")
             raise RuntimeError
 
+        # now, carsim solver is ready to use. loading params from simfile.
         self.configuration = self.solver_api.read_configuration(self.simfile_path)
         self.t_current = self.configuration.get('t_start')
         self.t_step = self.configuration.get('t_step')
 
-        # ここらの変数受け渡しをかしこく指定する.
-        # Create import and export arrays based on sizes from VS solver
-        self.import_array = [0.0, 0.0]
-        self.export_array = self.solver_api.copy_export_vars(self.configuration.get('n_export'))
-        # 警告
-        # if (len(self.export_array) < 3):
-        #     print("At least three export parameters needed.")
+        # prepare importation and exportation of variables
+        self.num_of_import_values = self.configuration.get('n_import')
+        self.num_of_export_values = self.configuration.get('n_export')
+        self.import_label_array = self.vehicle.get_import_labels()
+        self.export_label_array = self.vehicle.get_export_labels()
+        self.export_array = self.solver_api.copy_export_vars(self.num_of_export_values)
 
     def _is_system_available(self):
         """ check if the carsim library is available in the system. """
@@ -78,19 +81,20 @@ class CarsimManager:
             if current_os == "Linux":
                 mc_type = platform.machine()
                 if mc_type == 'x86_64':
-                    self.dll_size = 64
+                    dll_size = 64
                 else:
-                    self.dll_size = 32
+                    dll_size = 32
             else:
                 if "_64" in self.path_to_vs_dll:
-                    self.dll_size = 64
+                    dll_size = 64
                 else:
-                    self.dll_size = 32
+                    dll_size = 32
 
         # check availability
-        if self.system_word_size != self.dll_size:
+        _system_word_size = (8 * struct.calcsize("P"))  # 32 or 64
+        if _system_word_size != dll_size:
             print("Python size (32/64) must match size of .dlls being loaded.")
-            print("Python size:", self.system_word_size, "DLL size:", self.dll_size)
+            print("Python size:", _system_word_size, "DLL size:", dll_size)
             return False
         else:
             return True
@@ -108,14 +112,11 @@ class CarsimManager:
 
     def reset(self):
         """ reset """
-        # クローズすると戻れない. 初期状態に戻したいが, 実装が難しい.
+        # 未実装. クローズすると戻れない. 初期状態に戻したいが, 実装が難しい.
         pass
 
     def step(self, action, delta_time):
         """ step run of carsim for delta_time with given action """
-        # デバッグ中
-        # import, export周りをmodels/からインポートしたクラス使って上手いことやる.
-
         _loop_num = delta_time // timedelta(seconds=self.t_step)
 
         for _ in range(_loop_num):
@@ -123,23 +124,20 @@ class CarsimManager:
             # Run the integration loop
             self.t_current += self.t_step  # increment the time
 
-            # Steering Controller variables, based on previous exports
-            # x_center_of_gravity = self.export_array[0]
-            # y_center_of_gravity = self.export_array[1]
-            # _degrees_to_radians_scale_factor = 180.0 / 3.1415
-            # yaw = self.export_array[2] / _degrees_to_radians_scale_factor  # convert export deg to rad
+            # エラーハンドリング必要.
 
-            # copy values for 3 variables that the VS solver will import
-            # import_array = [-1.0, 10.0, 10.0] # actionを入れる.
-            import_array = action
+            # reshape dict to list
+            import_array = []
+            for key in self.import_label_array:
+                import_array.append(action[key])
 
-            # Call the VS API integration function
+            # call vs_api function
             status, self.export_array = self.solver_api.integrate_io(self.t_current, import_array, self.export_array)
 
             # dummy info
             info = ""
 
-        return self.export_array, status, info
+        return dict(zip(self.export_label_array, self.export_array)), status, self.t_current
 
     def run_all(self):
         """ run all simulation steps at once """
@@ -161,5 +159,6 @@ class CarsimManager:
 
     def save_results_into_carsimdb(self, results_source_dir, results_target_dir):
         """ copy latest  """
-        logger.info("Saving results.")
+        logger.info(f"Saving results into {results_target_dir}")
         shutil.copytree(results_source_dir, results_target_dir, dirs_exist_ok=True)
+        logger.info("Successfully saved results.")
