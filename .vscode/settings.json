@@ -1,0 +1,17 @@
+{
+    "[python]": {
+      "editor.tabSize": 4,
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": false,
+      "editor.formatOnType": false,
+    },
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.maxNumberOfProblems": 100,
+    "python.linting.mypyEnabled": false,
+    "python.linting.pylamaEnabled": false,
+    "python.formatting.autopep8Path": "autopep8",
+    "python.formatting.provider": "autopep8"
+}
