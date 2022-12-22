@@ -8,10 +8,8 @@ from rich.progress import track
 logger = initialize_logging(__name__)
 
 # constant params
-SIMFILE_PATH = r"C:\Users\Public\Documents\CarSim2022.1_Data\simfile.sim"
+CARSIM_DB_DIR = r"C:\Users\Public\Documents\CarSim2022.1_Data"
 VEHICLE_TYPE = "normal_vehicle"
-RESULTS_SOURCE_DIR = r"C:\Users\mizuho\carsim\Results"
-RESULTS_TARGET_DIR = r"C:\Users\Public\Documents\CarSim2022.1_Data\Results"
 
 
 def main() -> None:
@@ -20,7 +18,7 @@ def main() -> None:
 
     # instantiate carsim manager
     cm = CarsimManager(
-        simfile_path=SIMFILE_PATH,
+        carsim_db_dir=CARSIM_DB_DIR,
         vehicle_type=VEHICLE_TYPE,
     )
 
@@ -35,9 +33,9 @@ def main() -> None:
 
             # prepare operational signals
             control_inputs = {
-                "IMP_STEER_SW": 10.0,
+                "IMP_STEER_SW": 20.0,
                 "IMP_FBK_PDL": 1.0,
-                "IMP_THROTTLE_ENGINE": 5.0
+                "IMP_THROTTLE_ENGINE": 10.0
             }
 
             # update vehicle states
@@ -61,10 +59,7 @@ def main() -> None:
     cm.close()
 
     # save results to check results with vs_visualizer
-    cm.save_results_into_carsimdb(
-        results_source_dir=RESULTS_SOURCE_DIR,
-        results_target_dir=RESULTS_TARGET_DIR
-    )
+    cm.save_results_into_carsimdb()
 
 if __name__ == "__main__":
     sys.exit(main())

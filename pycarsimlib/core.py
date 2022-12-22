@@ -19,13 +19,14 @@ class CarsimManager:
     """ carsim manager """
     def __init__(
         self,
-        simfile_path: str,
+        carsim_db_dir: str,
         vehicle_type: str,
         **kwargs
     ) -> None:
 
         # set simfile path
-        self.simfile_path = simfile_path
+        self.carsimdb_dir = carsim_db_dir
+        self.simfile_path = os.path.join(self.carsimdb_dir, "simfile.sim")
         logger.info(f"simfile path : {self.simfile_path}")
 
         # select vehicle models
@@ -154,8 +155,20 @@ class CarsimManager:
         self.solver_api.terminate_run(self.t_current)
         logger.info("Carsim solver terminated normally.")
 
-    def save_results_into_carsimdb(self, results_source_dir, results_target_dir):
+    def save_results_into_carsimdb(self, results_source_dir="", results_target_dir=""):
         """ copy latest results dir into carsimdb location """
-        logger.info(f"Saving results into {results_target_dir}")
-        shutil.copytree(results_source_dir, results_target_dir, dirs_exist_ok=True)
+
+        # keep arguments
+        _source_dir = results_source_dir
+        _target_dir = results_target_dir
+
+        # set paths
+        if not _source_dir:
+            _source_dir = os.path.join(os.getcwd(), "Results")
+        if not _target_dir:
+            _target_dir = os.path.join(self.carsimdb_dir, "Results")
+
+        # copy results dir
+        logger.info(f"Saving results into {_target_dir}")
+        shutil.copytree(_source_dir, _target_dir, dirs_exist_ok=True)
         logger.info("Successfully saved results.")
