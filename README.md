@@ -1,5 +1,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+> [!CAUTION]
+> **This repository will no longer be publicly available after July 3, 2026.**
+
 # pycarsimlib
 An easy-to-use wrapper library to call carsim solver from python script.
 
